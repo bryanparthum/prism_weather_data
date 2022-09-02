@@ -22,9 +22,8 @@ gc()
 list.of.packages <- c('magrittr','tidyverse','dplyr','data.table','lubridate',
                       'arrow',
                       "prism",
-                      "spData",'sf','tigris', 'urbnmapr',
+                      'sf', 'urbnmapr',
                       'raster', 'exactextractr',
-                      'tictoc',
                       'foreach', 'doParallel',
                       'archive')
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]

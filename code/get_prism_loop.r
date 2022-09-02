@@ -8,6 +8,7 @@
 # ## examples and info available here: https://docs.ropensci.org/prism/
 # install.packages("devtools")
 # devtools::install_github(repo="prism",username="ropensci")
+# devtools::install_github("UrbanInstitute/urbnmapr")
 
 ##########################
 #################  library
@@ -18,11 +19,12 @@ rm(list = ls())
 gc()
 
 ## This function will check if a package is installed, and if not, install it
-list.of.packages <- c('magrittr','tidyverse','data.table','lubridate',
+list.of.packages <- c('magrittr','tidyverse','dplyr','data.table','lubridate',
                       'arrow',
                       "prism",
                       'sf', 'urbnmapr',
-                      'raster', 'exactextractr')
+                      'raster', 'exactextractr',
+                      'archive')
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
 lapply(list.of.packages, library, character.only = TRUE)
