@@ -1,11 +1,9 @@
-## written by US EPA National Center for Environmental Economics, August 2022
-
 ###############################################################################
 ###########################    Get PRISM Weather    ###########################
 ###############################################################################
 
-# ## Install packages if they are not on the machine
-# ## examples and info available here: https://docs.ropensci.org/prism/
+## install packages if they are not on the machine
+## examples and info available here: https://docs.ropensci.org/prism/
 # install.packages("devtools")
 # devtools::install_github(repo="prism",username="ropensci")
 # devtools::install_github("UrbanInstitute/urbnmapr")
@@ -14,7 +12,7 @@
 #################  library
 ##########################
 
-## Clear worksace
+## clear worksace
 rm(list = ls())
 gc()
 
@@ -59,20 +57,24 @@ polys = st_transform(polys, st_crs(usa))[usa,]
 polys %>% st_write('store/huc12_conus/huc12_conus.shp')
 
 ## open a prism raster and reproject so that the huc12s are already in the correct projection
-options(prism.path = "store/temporary")
+if (!dir.exists('store/prism_temporary')) {dir.create('store/prism_temporary/', recursive = T)}
+options(prism.path = "store/prism_temporary")
 get_prism_dailys(type = "ppt", minDate = "1999-12-31", maxDate = "1999-12-31", keepZip = F)
-dir    = "store/temporary"
-subdir = list.files("store/temporary")
-path   = list.files("store/temporary", full.names = T)
+dir    = 'store/prism_temporary'
+subdir = list.files(dir)
+path   = list.files(dir, full.names = T)
 raster = raster(paste(path, "/", subdir, ".bil", sep = ""))
 polys =
   st_read('store/huc12_conus/huc12_conus.shp') %>%
   st_transform(st_crs(raster))
+unlink(dir, recursive = T)
+
+## export to skip computation time above
+polys %>% st_write('store/huc12_conus_with_prism_crs/huc12_conus_with_prism_crs.shp')
 
 ## check projections
-polys %>% st_write('store/huc12_conus_with_prism_crs/huc12_conus_with_prism_crs.shp')
-plot(polys)
-plot(raster, add = T)
+# plot(polys)
+# plot(raster, add = T)
 
 ## read from above
 polys = 
@@ -103,7 +105,7 @@ foreach::getDoParRegistered()
 foreach::getDoParWorkers()
 
 ##########################
-################  download
+#################  execute
 ##########################
 
 ## export scenario-specific files to read into fredi
@@ -126,10 +128,6 @@ foreach(DATE      = as.character(seq(ymd("2000-01-01"), ymd("2022-07-31"), "days
                         ## set destination for PRISM raw .bil files
                         options(prism.path = dir) 
                         get_prism_dailys(type = "ppt", minDate = DATE, maxDate = DATE, keepZip = F) 
-                        
-                        ##########################
-                        ################## extract
-                        ##########################
                         
                         ## paths
                         subdir = list.files(dir)
