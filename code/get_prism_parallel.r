@@ -153,4 +153,4 @@ foreach(DATE      = as.character(seq(ymd("2000-01-01"), ymd("2022-07-31"), "days
 ## stop cluster
 parallel::stopCluster(cl = my.cluster)
 
-## end of script, have a nice day!
+## end of script, have a great day!
